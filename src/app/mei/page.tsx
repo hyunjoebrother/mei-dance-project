@@ -2,7 +2,9 @@ import Link from "next/link";
 import "../globals.css";
 
 export default function App() {
-  const code = new URL(window.location.href).searchParams.get("code");
+  if (typeof window !== "undefined") {
+    const code = new URL(window.location.href).searchParams.get("code");
+  }
   const clientCode = "347672391592808";
   const redirectUri = "https://mei-dance-project.pages.dev/mei";
 
