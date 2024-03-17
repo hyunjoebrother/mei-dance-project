@@ -14,7 +14,7 @@ const getReelsData = async () => {
   return reels?.items as any[];
 };
 
-export default async function App() {
+const App: React.FC = async () => {
   const fetchArtistData = await getArtistData();
   const fetchReelsData = await getReelsData();
 
@@ -48,4 +48,6 @@ export default async function App() {
       </div>
     </div>
   );
-}
+};
+
+export default App;
