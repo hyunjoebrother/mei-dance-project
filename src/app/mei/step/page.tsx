@@ -21,7 +21,7 @@ const App: React.FC = async () => {
   return (
     <div className="font-bold  flex flex-col">
       릴스 테스트 페이지
-      <div className="font-bold flex flex-col">
+      {/* <div className="font-bold flex flex-col">
         <h1>아티스트 리스트</h1>
         {fetchArtistData?.map((artist) => (
           <div key={artist.id}>
@@ -45,7 +45,7 @@ const App: React.FC = async () => {
             ></video>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
