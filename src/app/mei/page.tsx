@@ -8,6 +8,7 @@ interface InstagramPost {
   id: string;
   media_url: string;
   permalink: string;
+  caption: string;
 }
 
 const App: React.FC = () => {
@@ -20,9 +21,10 @@ const App: React.FC = () => {
         const accessToken: string =
           "IGQWRNVXBiLTM0MnQzWGpESkdPMnBYYVA2cFlxTk5VWGlCcFN1bHhrWkh1bnhiMnU3MHBiaTJvUmRJS0o3dnk1SUpxSFdZAVFRUeWRkWVdYN2lHYWxqTDhxNnZAYdHJsUVFycXoxYTJIbk5zOHJqZAzRwZAkpxcjBHbTNEWUp0Wm1zNXlIdwZDZD"; // 토큰 주기적으로 업데이트 필요
         const userId: string = "7036437786478855";
+        const limit: number = 100;
 
         const response = await fetch(
-          `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink&access_token=${accessToken}`
+          `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,caption&limit=${limit}&access_token=${accessToken}`
         );
         const data = await response.json();
         console.log("data:", data);
@@ -61,7 +63,7 @@ const App: React.FC = () => {
             //   </a>
             // </div>
             <div key={post.id}>
-              {post.permalink.includes("reel") ? ( // Check if the post is a reel
+              {post.permalink.includes("reel") && post.caption.includes("#seventeen") ? ( // Check if the post is a reel
                 <div>
                   <video
                     src={post.media_url}
@@ -70,25 +72,26 @@ const App: React.FC = () => {
                     height="300"
                   ></video>{" "}
                   {/* Render reel as video */}
-                  <a
+                  {/* <a
                     href={post.permalink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     릴스 확인하러 ㄱㄱㄱ
-                  </a>
+                  </a> */}
+                  <p>{post.caption}</p>
                 </div>
               ) : (
                 <div>
-                  <img src={post.media_url} alt="Instagram Post" />
+                  {/* <img src={post.media_url} alt="Instagram Post" />
                   <a
                     href={post.permalink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     게시글 확인하러 ㄱㄱㄱ
-                  </a>
-                </div>
+                  </a>*/}
+                </div> 
               )}
             </div>
           ))}
