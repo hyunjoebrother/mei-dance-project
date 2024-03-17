@@ -1,71 +1,52 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../../globals.css";
+import PocketBase from "pocketbase";
 
-interface ReelsData {
-  id: string;
-  media_url: string;
-  permalink: string;
-}
+const pb = new PocketBase("http://127.0.0.1:8090");
 
-export default function App() {
-  const [reelsData, setReelsData] = useState<ReelsData | null>(null);
+const getArtistData = async () => {
+  const artists = await pb.collection("artists").getList();
 
-  useEffect(() => {
-    const fetchReelsData = async () => {
-      try {
-        const REELS_LINK =
-          "https://www.instagram.com/reel/C4ciI8UBrdP/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="; // Your Instagram Reel Link
-        const response = await fetch(REELS_LINK);
-        const html = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const scripts = Array.from(doc.querySelectorAll("script"));
-        const jsonScript = scripts.find((script) =>
-          script.textContent?.includes("window.__additionalDataLoaded")
-        );
-        if (jsonScript) {
-          const jsonData = JSON.parse(
-            jsonScript.textContent!.split("=")[1].trim().slice(0, -1)
-          );
-          const reels =
-            jsonData.graphql.shortcode_media.edge_sidecar_to_children.edges.map(
-              (edge: any) => ({
-                id: edge.node.id,
-                media_url: edge.node.display_resources[0].src,
-                permalink: `https://www.instagram.com/p/${edge.node.shortcode}/`,
-              })
-            );
-          setReelsData(reels[0]); // Assuming only one reel is available
-        }
-      } catch (error) {
-        console.error("Error fetching Instagram Reel:", error);
-      }
-    };
+  return artists?.items as any[];
+};
 
-    fetchReelsData();
-  }, []);
+const getReelsData = async () => {
+  const reels = await pb.collection("reels").getList();
+
+  return reels?.items as any[];
+};
+
+export default async function App() {
+  const fetchArtistData = await getArtistData();
+  const fetchReelsData = await getReelsData();
 
   return (
     <div className="font-bold  flex flex-col">
       릴스 테스트 페이지
       <div className="font-bold flex flex-col">
-        <h1>인스타그램 릴스</h1>
-        {reelsData ? (
-          <div>
-            <img src={reelsData.media_url} alt="Instagram Reel" />
-            <a
-              href={reelsData.permalink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View on Instagram
-            </a>
+        <h1>아티스트 리스트</h1>
+        {fetchArtistData?.map((artist) => (
+          <div key={artist.id}>
+            {artist.artistName}
+            <br />
+            {artist.artistGroup}
           </div>
-        ) : (
-          <p>Loading...</p>
-        )}
+        ))}
+        <h1>릴스 리스트</h1>
+        {fetchReelsData?.map((reels) => (
+          <div key={reels.id}>
+            {reels.artistName}
+            <br />
+            {reels.reelsContent}
+            <br />
+            <video
+              src={reels.reelsLink}
+              controls
+              width="300"
+              height="300"
+            ></video>
+          </div>
+        ))}
       </div>
     </div>
   );
