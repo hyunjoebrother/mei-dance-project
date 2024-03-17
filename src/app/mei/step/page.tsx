@@ -2,21 +2,21 @@ import React from "react";
 import "../../globals.css";
 import PocketBase from "pocketbase";
 
-const pb = new PocketBase("http://127.0.0.1:8090");
+// const pb = new PocketBase("http://127.0.0.1:8090");
 
-const getArtistData = async () => {
-  const artists = await pb.collection("artists").getList();
-  return artists?.items as any[];
-};
+// const getArtistData = async () => {
+//   const artists = await pb.collection("artists").getList();
+//   return artists?.items as any[];
+// };
 
-const getReelsData = async () => {
-  const reels = await pb.collection("reels").getList();
-  return reels?.items as any[];
-};
+// const getReelsData = async () => {
+//   const reels = await pb.collection("reels").getList();
+//   return reels?.items as any[];
+// };
 
 const App: React.FC = async () => {
-  const fetchArtistData = await getArtistData();
-  const fetchReelsData = await getReelsData();
+  // const fetchArtistData = await getArtistData();
+  // const fetchReelsData = await getReelsData();
 
   return (
     <div className="font-bold  flex flex-col">
