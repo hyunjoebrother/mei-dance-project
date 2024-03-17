@@ -6,13 +6,11 @@ const pb = new PocketBase("http://127.0.0.1:8090");
 
 const getArtistData = async () => {
   const artists = await pb.collection("artists").getList();
-
   return artists?.items as any[];
 };
 
 const getReelsData = async () => {
   const reels = await pb.collection("reels").getList();
-
   return reels?.items as any[];
 };
 
