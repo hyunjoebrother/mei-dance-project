@@ -1,60 +1,68 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import "../../globals.css";
 import PocketBase from "pocketbase";
 
+const queryClient = new QueryClient();
 const pb = new PocketBase("http://127.0.0.1:8090");
 
+const fetchArtistData = async () => {
+  const artists = await pb.collection("artists").getList();
+  return artists?.items || [];
+};
+
+const fetchReelsData = async () => {
+  const reels = await pb.collection("reels").getList();
+  return reels?.items || [];
+};
+
 const App: React.FC = () => {
-  const [artistData, setArtistData] = useState<any[]>([]);
-  const [reelsData, setReelsData] = useState<any[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const artists = await pb.collection("artists").getList();
-        const reels = await pb.collection("reels").getList();
-        setArtistData(artists?.items || []);
-        setReelsData(reels?.items || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const { data: artistData, isLoading: artistLoading } = useQuery(
+    "artistData",
+    fetchArtistData
+  );
 
-    fetchData();
-  }, []);
+  const { data: reelsData, isLoading: reelsLoading } = useQuery(
+    "reelsData",
+    fetchReelsData
+  );
 
   const handleGroupSelection = (group: string) => {
     setSelectedGroup(group);
   };
 
-  const getArtistName = (artistId: string) => {
-    const artist = artistData.find((artist) => artist.id === artistId);
-    return artist ? artist.name : "Unknown";
-  };
-
-  const getArtistGroup = (artistId: string) => {
-    const artist = artistData.find((artist) => artist.id === artistId);
-    return artist ? artist.group : "Unknown";
-  };
-
   const getUniqueGroups = () => {
+    if (!artistData) return [];
     return Array.from(new Set(artistData.map((artist) => artist.group)));
   };
 
   const uniqueGroups = getUniqueGroups();
 
+  const getArtistName = (artistId: string) => {
+    const artist = artistData?.find((artist) => artist.id === artistId);
+    return artist ? artist.name : "Unknown";
+  };
+
+  const getArtistGroup = (artistId: string) => {
+    const artist = artistData?.find((artist) => artist.id === artistId);
+    return artist ? artist.group : "Unknown";
+  };
+
   const filteredArtists = selectedGroup
-    ? artistData.filter((artist) => artist.group === selectedGroup)
+    ? artistData?.filter((artist) => artist.group === selectedGroup)
     : artistData;
 
   const filteredReels = selectedGroup
-    ? reelsData.filter(
+    ? reelsData?.filter(
         (reels) => getArtistGroup(reels.artistName) === selectedGroup
       )
     : reelsData;
+
+  if (artistLoading || reelsLoading) return <p>Loading...</p>;
 
   return (
     <div className="font-bold flex flex-col">
@@ -75,7 +83,7 @@ const App: React.FC = () => {
           ))}
         </div>
         <div>
-          {filteredArtists.map((artist) => (
+          {filteredArtists?.map((artist) => (
             <div key={artist.id} className="flex flex-row gap-2 items-end">
               <p className="text-base">{artist.name}</p>
               <p className="text-xs">{artist.group}</p>
@@ -84,7 +92,7 @@ const App: React.FC = () => {
         </div>
         <h2>릴스 리스트</h2>
         <div>
-          {filteredReels.map((reels) => (
+          {filteredReels?.map((reels) => (
             <div key={reels.id}>
               <p className="text-base">{getArtistName(reels.artistName)}</p>
               <p className="text-xs">{reels.songName}</p>
@@ -105,4 +113,12 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+const AppWrapper: React.FC = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  );
+};
+
+export default AppWrapper;
