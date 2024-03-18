@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import RecentReelsWrapper from "@/components/RecentReels";
 import RecentReels from "@/components/RecentReels";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +22,7 @@ const Main: React.FC = () => {
       <div className="w-full">
         <h3 className="pl-8 mb-2 font-bold text-lg">최신 영역입니다</h3>
         <div className="w-full h-auto overflow-x-auto">
-          <RecentReels />
+          <RecentReelsWrapper />
         </div>
       </div>
       <div>
