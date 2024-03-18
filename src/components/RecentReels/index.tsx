@@ -15,9 +15,8 @@ const RecentReels: React.FC = () => {
   const { data: posts, isLoading } = useQuery<InstagramPost[]>(
     "instagramPosts",
     async () => {
-      const accessToken: string =
-        "IGQWROYzlESWdTbVBPeHRqc2tVOW9xOHF6WFpwZA1o0eFZAMZAk82cEJqV18ydnFkYTV0bk5sRVdVNjRIbEZAWeTROeEsyWUlKVElRc3luM2xnVHFBcF9JbFJQRnRmQXZA5ZA1NaT0w2UFQ3endQUQZDZD";
-      const userId: string = "7036437786478855";
+      const accessToken: string = process.env.NEXT_PUBLIC_ACCESS_TOKEN || "";
+      const userId: string = process.env.NEXT_PUBLIC_INSTA_APPID || "";
       const limit: number = 7;
       const response = await fetch(
         `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,caption&limit=${limit}&access_token=${accessToken}`
@@ -29,7 +28,7 @@ const RecentReels: React.FC = () => {
   );
 
   return (
-    <section className="w-[960px] h-auto py-3 flex flex-col bg-slate-500 overflow-x-scroll">
+    <section className="w-[960px] h-auto py-2 flex flex-col bg-slate-500 overflow-x-scroll">
       <div>
         {isLoading ? (
           <div className="w-[120px] h-[200px]">
@@ -53,7 +52,7 @@ const RecentReels: React.FC = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <p className="text-xs text-white">릴스 보기</p>
+                      <p className="text-xs text-white mt-2">릴스 보기</p>
                     </a>
                   </div>
                 )}
