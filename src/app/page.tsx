@@ -4,13 +4,6 @@ import RecentReels from "@/components/RecentReels";
 import Image from "next/image";
 import Link from "next/link";
 
-//   const url = `https://api.instagram.com/oauth/authorize
-//   ?client_id=347672391592808
-//   &redirect_uri=https://mei-dance-project.pages.dev/auth
-//   &scope=user_profile,user_media
-//   &response_type=code
-// `;
-
 const Main: React.FC = () => {
   return (
     <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-28 overflow-hidden">
@@ -26,7 +19,7 @@ const Main: React.FC = () => {
         </div>
       </div>
       <div>
-        <Link href="/mei/step">
+        <Link href="/choom">
           <button className="w-24 h-10 bg-red-500 rounded-2xl">
             다음 페이지로 이동
           </button>
