@@ -9,7 +9,7 @@ import Link from "next/link";
 // import mainLogo from "../../../public/images/logo.png";
 
 const queryClient = new QueryClient();
-const pb = new PocketBase("http://127.0.0.1:8090");
+const pb = new PocketBase("https://mei-dance.pockethost.io");
 
 interface InstagramPost {
   id: string;
@@ -23,7 +23,9 @@ const fetchArtistData = async () => {
 };
 
 const fetchReelsData = async () => {
-  const reels = await pb.collection("reels").getList();
+  const reels = await pb
+    .collection("reels")
+    .getList(1, 300, { sort: "-reelsDate" });
   return reels?.items || [];
 };
 
@@ -61,19 +63,10 @@ const Choom: React.FC = () => {
 
   const uniqueGroups = getUniqueGroups();
 
-  const getArtistName = (artistId: string) => {
-    const artist = artistData?.find((artist) => artist.id === artistId);
-    return artist ? artist.name : "Unknown";
-  };
-
   const getArtistGroup = (artistId: string) => {
     const artist = artistData?.find((artist) => artist.id === artistId);
     return artist ? artist.group : "Unknown";
   };
-
-  const filteredArtists = selectedGroup
-    ? artistData?.filter((artist) => artist.group === selectedGroup)
-    : artistData;
 
   const filteredReels = selectedGroup
     ? reelsData?.filter(
@@ -86,13 +79,30 @@ const Choom: React.FC = () => {
   >("instagramPosts", async () => {
     const accessToken: string = process.env.NEXT_PUBLIC_ACCESS_TOKEN || "";
     const userId: string = process.env.NEXT_PUBLIC_INSTA_APPID || "";
-    const limit: number = 100;
-    const response = await fetch(
-      `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,caption&limit=${limit}&access_token=${accessToken}`
+    const limitPerRequest: number = 100;
+    const totalLimit: number = 500;
+    let filteredData: InstagramPost[] = [];
+
+    const requests = Array.from(
+      { length: totalLimit / limitPerRequest },
+      async (_, index) => {
+        const offset = index * limitPerRequest;
+        const url = `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,media_type&limit=${limitPerRequest}&access_token=${accessToken}&offset=${offset}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.data.filter(
+          (item: { media_type: string }) => item.media_type === "VIDEO"
+        );
+      }
     );
-    const data = await response.json();
-    console.log("data:", data);
-    return data.data;
+
+    const responses = await Promise.all(requests);
+    responses.forEach((responseData) => {
+      filteredData = filteredData.concat(responseData);
+    });
+
+    console.log("filtered data:", filteredData);
+    return filteredData;
   });
 
   if (artistLoading || reelsLoading || instagramLoading)
