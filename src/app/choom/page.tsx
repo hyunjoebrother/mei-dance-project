@@ -147,7 +147,7 @@ const Choom: React.FC = () => {
             post.permalink.includes(reels.reelsLink)
           );
           return (
-            <Link href={`/choom/info/${reels?.id}`}>
+            <Link href={`/choom/info/${reels?.id}`} key={reels.id}>
               <div key={reels.id} className="flex flex-col items-center">
                 <video
                   src={matchingPost?.media_url}
