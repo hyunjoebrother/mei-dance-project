@@ -9,7 +9,7 @@ import Image from "next/image";
 // import mainLogo from "../../../public/images/logo.png";
 
 const queryClient = new QueryClient();
-const pb = new PocketBase("http://127.0.0.1:8090");
+const pb = new PocketBase("https://mei-dance.pockethost.io");
 
 interface InstagramPost {
   id: string;
