@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import "../globals.css";
 import PocketBase from "pocketbase";
 import Image from "next/image";
+import Link from "next/link";
 // import mainLogo from "../../../public/images/logo.png";
 
 const queryClient = new QueryClient();
@@ -143,20 +144,24 @@ const Choom: React.FC = () => {
       <div className="w-full grid grid-cols-3">
         {filteredReels?.map((reels) => {
           const matchingPost = posts?.find((post) =>
-            post.permalink.includes(reels.reelsLink) 
+            post.permalink.includes(reels.reelsLink)
           );
           return (
-            <div key={reels.id} className="flex flex-col items-center">
-              <video
-                src={matchingPost?.media_url}
-                controls
-                controlsList="nodownload"
-                loop
-                height={180}
-                className="mb-2 w-full"
-              ></video>
-              <p className="text-xs overflow-hidden whitespace-nowrap overflow-ellipsis">{reels?.songName}</p>
-            </div>
+            <Link href={`/choom/info/${reels?.id}`}>
+              <div key={reels.id} className="flex flex-col items-center">
+                <video
+                  src={matchingPost?.media_url}
+                  controls
+                  controlsList="nodownload"
+                  loop
+                  height={180}
+                  className="mb-2 w-full"
+                ></video>
+                <p className="text-xs overflow-hidden whitespace-nowrap overflow-ellipsis">
+                  {reels?.songName}
+                </p>
+              </div>
+            </Link>
           );
         })}
       </div>
