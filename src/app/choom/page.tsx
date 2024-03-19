@@ -155,9 +155,9 @@ const Choom: React.FC = () => {
                   controlsList="nodownload"
                   loop
                   height={180}
-                  className="mb-2 w-full"
+                  className="mb-1 w-full"
                 ></video>
-                <p className="text-xs overflow-hidden whitespace-nowrap overflow-ellipsis">
+                <p className="text-xs mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
                   {reels?.songName}
                 </p>
               </div>

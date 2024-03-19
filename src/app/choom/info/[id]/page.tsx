@@ -191,3 +191,5 @@ const InfoWrapper: React.FC = () => {
 };
 
 export default InfoWrapper;
+
+export const runtime = 'edge'
