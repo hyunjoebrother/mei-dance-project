@@ -1,15 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import "../globals.css";
+import "./index.css";
 import PocketBase from "pocketbase";
 import Image from "next/image";
 import Link from "next/link";
 // import mainLogo from "../../../public/images/logo.png";
 
 const queryClient = new QueryClient();
-const pb = new PocketBase("https://mei-dance.pockethost.io");
+let pb: PocketBase;
+
+try {
+  pb = new PocketBase("https://mei-dance.pockethost.io");
+} catch (error) {
+  console.log("Error: ", error);
+  /*@ts-ignore*/
+  console.log(error.isAbort);
+}
 
 interface InstagramPost {
   id: string;
@@ -22,24 +31,54 @@ const fetchArtistData = async () => {
   return artists?.items || [];
 };
 
-const fetchReelsData = async () => {
-  const reels = await pb
-    .collection("reels")
-    .getList(1, 300, { sort: "-reelsDate" });
-  return reels?.items || [];
+const fetchReelsData = async (page: number, limit: number, group?: string) => {
+  if (group) {
+    const reels = await pb.collection("reels").getList(1, 300, {
+      sort: "-reelsDate",
+    });
+    const filteredReels = reels?.items.filter(
+      (reel) => reel.artistName === group
+    );
+    return filteredReels || [];
+  } else {
+    const reels = await pb.collection("reels").getList(page, 72, {
+      sort: "-reelsDate",
+    });
+    return reels?.items || [];
+  }
 };
 
 const Choom: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = selectedGroup ? 72 : 24;
+  const [hasFetched, setHasFetched] = useState(false);
 
   const { data: artistData, isLoading: artistLoading } = useQuery(
     "artistData",
     fetchArtistData
   );
 
-  const { data: reelsData, isLoading: reelsLoading } = useQuery(
-    "reelsData",
-    fetchReelsData
+  useEffect(() => {}, [selectedGroup]);
+
+  useEffect(() => {
+    if (!hasFetched) {
+      fetchReelsData(1, 72, String(selectedGroup));
+      setHasFetched(true);
+    }
+  }, [selectedGroup, hasFetched]);
+
+  const {
+    data: reelsData,
+    isLoading: reelsLoading,
+    isFetching,
+  } = useQuery(
+    ["reelsData", currentPage],
+    () => fetchReelsData(currentPage, 72, String(selectedGroup)),
+    {
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
+    }
   );
 
   const handleGroupSelection = (group: string) => {
@@ -74,39 +113,37 @@ const Choom: React.FC = () => {
       )
     : reelsData;
 
+  console.log("필터링된 데이터", filteredReels);
+
   const { data: posts, isLoading: instagramLoading } = useQuery<
     InstagramPost[]
   >("instagramPosts", async () => {
     const accessToken: string = process.env.NEXT_PUBLIC_ACCESS_TOKEN || "";
     const userId: string = process.env.NEXT_PUBLIC_INSTA_APPID || "";
-    const limitPerRequest: number = 100;
-    const totalLimit: number = 500;
-    let filteredData: InstagramPost[] = [];
-
-    const requests = Array.from(
-      { length: totalLimit / limitPerRequest },
-      async (_, index) => {
-        const offset = index * limitPerRequest;
-        const url = `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,media_type&limit=${limitPerRequest}&access_token=${accessToken}&offset=${offset}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.data.filter(
-          (item: { media_type: string }) => item.media_type === "VIDEO"
-        );
-      }
+    const limit: number = 100;
+    const url = `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,media_type&limit=${limit}&access_token=${accessToken}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    return data.data.filter(
+      (item: { media_type: string }) => item.media_type === "VIDEO"
     );
-
-    const responses = await Promise.all(requests);
-    responses.forEach((responseData) => {
-      filteredData = filteredData.concat(responseData);
-    });
-
-    console.log("filtered data:", filteredData);
-    return filteredData;
   });
 
-  if (artistLoading || reelsLoading || instagramLoading)
-    return <p>Loading...</p>;
+  const loadMore = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+  const loadPreviousPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+  const isPreviousPageAvailable = currentPage > 1;
+  const isNextPageAvailable = reelsData?.length === 24;
+
+  // if (artistLoading || reelsLoading || instagramLoading)
+  //   return (
+  //     <div className="loading-overlay">
+  //       <div className="spinner">{/* <img src={mainLogo} alt="" /> */}</div>
+  //     </div>
+  //   );
 
   return (
     <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-36 overflow-hidden">
@@ -118,7 +155,7 @@ const Choom: React.FC = () => {
           </a>
         </div>
         <div className="w-full h-auto overflow-x-auto">
-          <div className="w-[480px] py-2 flex bg-pink-100 overflow-x-scroll">
+          <div className="w-[1200px] py-2 flex bg-pink-100 overflow-x-scroll">
             <div className="flex flex-row px-4 gap-3 text-center">
               {uniqueGroups.map((group) => (
                 <div
@@ -158,15 +195,32 @@ const Choom: React.FC = () => {
           );
           return (
             <Link href={`/choom/info/${reels?.id}`} key={reels.id}>
+              {isFetching && (
+                <div className="loading-overlay">
+                  <div className="spinner">
+                    {/* <img src={mainLogo} alt="" /> */}
+                  </div>
+                </div>
+              )}
               <div key={reels.id} className="flex flex-col items-center">
-                <video
-                  src={matchingPost?.media_url}
-                  controls
-                  controlsList="nodownload"
-                  loop
-                  height={180}
-                  className="mb-1 w-full"
-                ></video>
+                {matchingPost ? (
+                  <video
+                    src={matchingPost.media_url}
+                    controls
+                    controlsList="nodownload"
+                    loop
+                    height={180}
+                    className="mb-1 w-full"
+                  ></video>
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "30px",
+                      backgroundColor: "pink",
+                    }}
+                  ></div>
+                )}
                 <p className="text-xs mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
                   {reels?.songName}
                 </p>
@@ -175,6 +229,26 @@ const Choom: React.FC = () => {
           );
         })}
       </div>
+      {!selectedGroup && (
+        <div className="flex justify-center mt-4">
+          {isPreviousPageAvailable && (
+            <button
+              onClick={loadPreviousPage}
+              className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+            >
+              이전 페이지
+            </button>
+          )}
+          {isNextPageAvailable && (
+            <button
+              onClick={loadMore}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            >
+              다음 페이지
+            </button>
+          )}
+        </div>
+      )}
     </section>
   );
 };
