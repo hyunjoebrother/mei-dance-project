@@ -31,27 +31,16 @@ const fetchArtistData = async () => {
   return artists?.items || [];
 };
 
-const fetchReelsData = async (page: number, limit: number, group?: string) => {
-  if (group) {
-    const reels = await pb.collection("reels").getList(1, 300, {
-      sort: "-reelsDate",
-    });
-    const filteredReels = reels?.items.filter(
-      (reel) => reel.artistName === group
-    );
-    return filteredReels || [];
-  } else {
-    const reels = await pb.collection("reels").getList(page, 72, {
-      sort: "-reelsDate",
-    });
-    return reels?.items || [];
-  }
+const fetchReelsData = async () => {
+  const reels = await pb
+    .collection("reels")
+    .getList(1, 300, { sort: "-reelsDate" });
+  return reels?.items || [];
 };
 
 const Choom: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = selectedGroup ? 72 : 24;
   const [hasFetched, setHasFetched] = useState(false);
 
   const { data: artistData, isLoading: artistLoading } = useQuery(
@@ -63,7 +52,7 @@ const Choom: React.FC = () => {
 
   useEffect(() => {
     if (!hasFetched) {
-      fetchReelsData(1, 72, String(selectedGroup));
+      fetchReelsData;
       setHasFetched(true);
     }
   }, [selectedGroup, hasFetched]);
@@ -72,14 +61,10 @@ const Choom: React.FC = () => {
     data: reelsData,
     isLoading: reelsLoading,
     isFetching,
-  } = useQuery(
-    ["reelsData", currentPage],
-    () => fetchReelsData(currentPage, 72, String(selectedGroup)),
-    {
-      keepPreviousData: true,
-      refetchOnWindowFocus: false,
-    }
-  );
+  } = useQuery(["reelsData", currentPage], () => fetchReelsData(), {
+    keepPreviousData: true,
+    refetchOnWindowFocus: false,
+  });
 
   const handleGroupSelection = (group: string) => {
     setSelectedGroup((prevGroup) => (prevGroup === group ? null : group));
@@ -120,7 +105,7 @@ const Choom: React.FC = () => {
   >("instagramPosts", async () => {
     const accessToken: string = process.env.NEXT_PUBLIC_ACCESS_TOKEN || "";
     const userId: string = process.env.NEXT_PUBLIC_INSTA_APPID || "";
-    const limit: number = 100;
+    const limit: number = 72;
     const url = `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,media_type&limit=${limit}&access_token=${accessToken}`;
     const response = await fetch(url);
     const data = await response.json();
