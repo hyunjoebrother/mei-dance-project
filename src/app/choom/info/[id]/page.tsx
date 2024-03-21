@@ -9,16 +9,10 @@ import Image from "next/image";
 // import mainLogo from "../../../public/images/logo.png";
 
 const queryClient = new QueryClient();
-const pb = new PocketBase("https://mei-dance.pockethost.io");
-
-interface InstagramPost {
-  id: string;
-  permalink: string;
-  media_url: string;
-}
+const pb = new PocketBase("https://mei-devdance.pockethost.io");
 
 const fetchReelsData = async (id: string) => {
-  const reels = await pb.collection("reels").getOne(id);
+  const reels = await pb.collection("videos").getOne(id);
   console.log("릴스 정보", reels);
   return reels;
 };
@@ -45,20 +39,6 @@ const Info: React.FC = () => {
     "artistData",
     () => fetchArtistData(reelsData as any)
   );
-
-  const { data: posts, isLoading: instagramLoading } = useQuery<
-    InstagramPost[]
-  >("instagramPosts", async () => {
-    const accessToken: string = process.env.NEXT_PUBLIC_ACCESS_TOKEN || "";
-    const userId: string = process.env.NEXT_PUBLIC_INSTA_APPID || "";
-    const limit: number = 100;
-    const response = await fetch(
-      `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,caption&limit=${limit}&access_token=${accessToken}`
-    );
-    const data = await response.json();
-    console.log("data:", data);
-    return data.data;
-  });
 
   const getArtistName = () => {
     return artistData ? artistData.name : "Unknown";
@@ -90,8 +70,15 @@ const Info: React.FC = () => {
     return artistData ? artistData.group : "Unknown";
   };
 
-  if (artistLoading || reelsLoading || instagramLoading)
-    return <p>Loading...</p>;
+  const formatCdnLink = (fileName: string, idInfo?: string) => {
+    if (idInfo) {
+      const cdnLink = "https://mei-dance.cdn.misae.us/l072ms0ejrlm6y9/";
+      return cdnLink + idInfo + "/" + fileName;
+    }
+    return "";
+  };
+
+  if (artistLoading || reelsLoading) return <p>Loading...</p>;
 
   return (
     <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-20 overflow-hidden">
@@ -109,33 +96,20 @@ const Info: React.FC = () => {
       </header>
       <div className="w-full flex flex-col items-center justify-center">
         <div className="w-full h-auto flex flex-col items-center">
-          {posts?.map((post) => {
-            if (post.permalink.includes(reelsData?.reelsLink)) {
-              return (
-                <div
-                  key={post.id}
-                  className="w-full h-full flex flex-col items-center"
-                >
-                  <video
-                    src={post.media_url}
-                    controls
-                    controlsList="nodownload"
-                    autoPlay
-                    loop
-                    width={280}
-                    className="mb-2"
-                  ></video>
-                </div>
-              );
-            } else {
-              return (
-                <div
-                  key={post.id}
-                  className="w-full h-full flex flex-col items-center bg-slate-400"
-                ></div>
-              );
-            }
-          })}
+          <div
+            key={reelsData?.id}
+            className="w-full h-full flex flex-col items-center"
+          >
+            <video
+              src={formatCdnLink(reelsData?.video, reelsData?.id)}
+              controls
+              controlsList="nodownload"
+              autoPlay
+              loop
+              width={280}
+              className="mb-2"
+            ></video>
+          </div>
         </div>
         <div className="flex flex-col mt-10">
           <div className="mx-10 px-4 py-3 flex flex-row justify-between items-center bg-slate-400 rounded-2xl">
@@ -192,4 +166,4 @@ const InfoWrapper: React.FC = () => {
 
 export default InfoWrapper;
 
-export const runtime = 'edge'
+export const runtime = "edge";
