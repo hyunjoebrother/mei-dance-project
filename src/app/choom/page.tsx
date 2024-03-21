@@ -13,17 +13,11 @@ const queryClient = new QueryClient();
 let pb: PocketBase;
 
 try {
-  pb = new PocketBase("https://mei-dance.pockethost.io");
+  pb = new PocketBase("https://mei-devdance.pockethost.io");
 } catch (error) {
   console.log("Error: ", error);
   /*@ts-ignore*/
   console.log(error.isAbort);
-}
-
-interface InstagramPost {
-  id: string;
-  permalink: string;
-  media_url: string;
 }
 
 const fetchArtistData = async () => {
@@ -32,9 +26,7 @@ const fetchArtistData = async () => {
 };
 
 const fetchReelsData = async () => {
-  const reels = await pb
-    .collection("reels")
-    .getList(1, 300, { sort: "-reelsDate" });
+  const reels = await pb.collection("videos").getList();
   return reels?.items || [];
 };
 
@@ -100,19 +92,13 @@ const Choom: React.FC = () => {
 
   console.log("필터링된 데이터", filteredReels);
 
-  const { data: posts, isLoading: instagramLoading } = useQuery<
-    InstagramPost[]
-  >("instagramPosts", async () => {
-    const accessToken: string = process.env.NEXT_PUBLIC_ACCESS_TOKEN || "";
-    const userId: string = process.env.NEXT_PUBLIC_INSTA_APPID || "";
-    const limit: number = 72;
-    const url = `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,media_type&limit=${limit}&access_token=${accessToken}`;
-    const response = await fetch(url);
-    const data = await response.json();
-    return data.data.filter(
-      (item: { media_type: string }) => item.media_type === "VIDEO"
-    );
-  });
+  const formatCdnLink = (fileName: string, idInfo?: string) => {
+    if (idInfo) {
+      const cdnLink = "https://mei-dance.cdn.misae.us/l072ms0ejrlm6y9/";
+      return cdnLink + idInfo + "/" + fileName;
+    }
+    return "";
+  };
 
   const loadMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -140,7 +126,7 @@ const Choom: React.FC = () => {
           </a>
         </div>
         <div className="w-full h-auto overflow-x-auto">
-          <div className="w-[1200px] py-2 flex bg-pink-100 overflow-x-scroll">
+          <div className="w-[3000px] py-2 flex bg-pink-100 overflow-x-scroll">
             <div className="flex flex-row px-4 gap-3 text-center">
               {uniqueGroups.map((group) => (
                 <div
@@ -174,45 +160,32 @@ const Choom: React.FC = () => {
         </div>
       </header>
       <div className="w-full grid grid-cols-3">
-        {filteredReels?.map((reels) => {
-          const matchingPost = posts?.find((post) =>
-            post.permalink.includes(reels.reelsLink)
-          );
-          return (
-            <Link href={`/choom/info/${reels?.id}`} key={reels.id}>
-              {isFetching && (
-                <div className="loading-overlay">
-                  <div className="spinner">
-                    {/* <img src={mainLogo} alt="" /> */}
-                  </div>
-                </div>
-              )}
+        {filteredReels?.map((reels) => (
+          <Link href={`/choom/info/${reels.id}`} key={reels.id}>
+            <div className="flex flex-col items-center">
               <div key={reels.id} className="flex flex-col items-center">
-                {matchingPost ? (
-                  <video
-                    src={matchingPost.media_url}
-                    controls
-                    controlsList="nodownload"
-                    loop
-                    height={180}
-                    className="mb-1 w-full"
-                  ></video>
-                ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "30px",
-                      backgroundColor: "pink",
-                    }}
-                  ></div>
+                {/* Add conditional rendering for loading state */}
+                {isFetching && (
+                  <div className="loading-overlay">
+                    <div className="spinner"></div>
+                  </div>
                 )}
+                <img src={formatCdnLink(reels.thumbnail, reels.id)} alt="" />
+                {/* <video
+                  src={formatCdnLink(reels.video, reels.id)}
+                  controls
+                  controlsList="nodownload"
+                  loop
+                  height={180}
+                  className="mb-1 w-full"
+                ></video> */}
                 <p className="text-xs mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
                   {reels?.songName}
                 </p>
               </div>
-            </Link>
-          );
-        })}
+            </div>
+          </Link>
+        ))}
       </div>
       {!selectedGroup && (
         <div className="flex justify-center mt-4">
