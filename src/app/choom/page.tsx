@@ -7,7 +7,7 @@ import "./index.css";
 import PocketBase from "pocketbase";
 import Image from "next/image";
 import Link from "next/link";
-// import mainLogo from "../../../public/images/logo.png";
+import mainLogo from "../../../public/images/logo.png";
 
 const queryClient = new QueryClient();
 let pb: PocketBase;
@@ -21,12 +21,12 @@ try {
 }
 
 const fetchArtistData = async () => {
-  const artists = await pb.collection("artists").getList();
+  const artists = await pb.collection("artists").getList(1, 100);
   return artists?.items || [];
 };
 
-const fetchReelsData = async () => {
-  const reels = await pb.collection("videos").getList();
+const fetchReelsData = async (page: number) => {
+  const reels = await pb.collection("videos").getList(page, 300);
   return reels?.items || [];
 };
 
@@ -40,7 +40,11 @@ const Choom: React.FC = () => {
     fetchArtistData
   );
 
-  useEffect(() => {}, [selectedGroup]);
+  useEffect(() => {
+    if (selectedGroup) {
+      setCurrentPage(1);
+    }
+  }, [selectedGroup]);
 
   useEffect(() => {
     if (!hasFetched) {
@@ -53,7 +57,7 @@ const Choom: React.FC = () => {
     data: reelsData,
     isLoading: reelsLoading,
     isFetching,
-  } = useQuery(["reelsData", currentPage], () => fetchReelsData(), {
+  } = useQuery(["reelsData", currentPage], () => fetchReelsData(currentPage), {
     keepPreviousData: true,
     refetchOnWindowFocus: false,
   });
@@ -103,11 +107,13 @@ const Choom: React.FC = () => {
   const loadMore = () => {
     setCurrentPage((prevPage) => prevPage + 1);
   };
+
   const loadPreviousPage = () => {
-    setCurrentPage((prevPage) => prevPage - 1);
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
+
   const isPreviousPageAvailable = currentPage > 1;
-  const isNextPageAvailable = reelsData?.length === 24;
+  const isNextPageAvailable = reelsData?.length === 60;
 
   // if (artistLoading || reelsLoading || instagramLoading)
   //   return (
@@ -117,38 +123,38 @@ const Choom: React.FC = () => {
   //   );
 
   return (
-    <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-36 overflow-hidden">
-      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 py-3 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-        <div className="flex items-center justify-center">
+    <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-36 overflow-hidden  bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
+      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-300 bg-gradient-to-b from-pink-500 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
+        <div className="py-3 flex items-center justify-center">
           <a href="/">
-            {/* <Image src={mainLogo} alt="" className="w-9 h-9 cursor-pointer" /> */}
-            <p>LOGO</p>
+            <Image src={mainLogo} alt="" className="w-9 h-9 cursor-pointer" />
+            {/* <p>LOGO</p> */}
           </a>
         </div>
-        <div className="w-full h-auto overflow-x-auto">
-          <div className="w-[3000px] py-2 flex bg-pink-100 overflow-x-scroll">
-            <div className="flex flex-row px-4 gap-3 text-center">
+        <div className="scrollbar w-full h-auto border-t-2 border-b-2 border-pink-400 overflow-x-auto">
+          <div className="scrollbar w-[3000px] py-3 flex bg-white overflow-x-scroll">
+            <div className="scrollbar flex flex-row px-4 gap-5 text-center">
               {uniqueGroups.map((group) => (
                 <div
                   key={group}
                   onClick={() => handleGroupSelection(group)}
-                  className="flex flex-col gap-1"
+                  className="flex flex-col gap-2 items-center justify-center"
                 >
                   <button
                     style={{
                       backgroundImage: `url(${getGroupLogo(group)})`,
                       backgroundSize: "cover",
-                      width: "50px",
-                      height: "50px",
+                      width: "60px",
+                      height: "60px",
                       borderRadius: "100px",
                     }}
                     className={`text-xs ${
-                      group === selectedGroup ? "border-2 border-pink-700" : ""
+                      group === selectedGroup ? "border-[3px] border-pink-600" : ""
                     }`}
                   ></button>
                   <p
-                    className={`text-xs ${
-                      group === selectedGroup ? "text-pink-700 font-bold" : ""
+                    className={`text-xs font-medium overflow-hidden whitespace-nowrap overflow-ellipsis ${
+                      group === selectedGroup ? "text-pink-700 font-extrabold" : ""
                     }`}
                   >
                     {group}
@@ -162,51 +168,42 @@ const Choom: React.FC = () => {
       <div className="w-full grid grid-cols-3">
         {filteredReels?.map((reels) => (
           <Link href={`/choom/info/${reels.id}`} key={reels.id}>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center border-2 border-pink-400 bg-white">
               <div key={reels.id} className="flex flex-col items-center">
-                {/* Add conditional rendering for loading state */}
                 {isFetching && (
                   <div className="loading-overlay">
                     <div className="spinner"></div>
                   </div>
                 )}
                 <img src={formatCdnLink(reels.thumbnail, reels.id)} alt="" />
-                {/* <video
-                  src={formatCdnLink(reels.video, reels.id)}
-                  controls
-                  controlsList="nodownload"
-                  loop
-                  height={180}
-                  className="mb-1 w-full"
-                ></video> */}
-                <p className="text-xs mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {reels?.songName}
+                <p className="text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                  {reels?.songName.length > 16
+                    ? reels?.songName.substring(0, 16) + "..."
+                    : reels?.songName}
                 </p>
               </div>
             </div>
           </Link>
         ))}
       </div>
-      {!selectedGroup && (
-        <div className="flex justify-center mt-4">
-          {isPreviousPageAvailable && (
-            <button
-              onClick={loadPreviousPage}
-              className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              이전 페이지
-            </button>
-          )}
-          {isNextPageAvailable && (
-            <button
-              onClick={loadMore}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              다음 페이지
-            </button>
-          )}
-        </div>
-      )}
+      <div className="flex justify-center mt-4 mb-20">
+        {isPreviousPageAvailable && (
+          <button
+            onClick={loadPreviousPage}
+            className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
+            이전 페이지
+          </button>
+        )}
+        {isNextPageAvailable && (
+          <button
+            onClick={loadMore}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
+            다음 페이지
+          </button>
+        )}
+      </div>
     </section>
   );
 };

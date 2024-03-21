@@ -28,31 +28,30 @@ const RecentReels: React.FC = () => {
   );
 
   return (
-    <section className="w-[960px] h-auto py-2 flex flex-col bg-slate-500 overflow-x-scroll">
+    <section className="scrollbar w-[900px] h-auto py-4 flex flex-col bg-white overflow-x-scroll">
       <div>
         {isLoading ? (
-          <div className="w-[120px] h-[200px]">
+          <div className="w-[150px] h-[220px]">
             <p>Loading...</p>
           </div>
         ) : (
-          <div className="flex flex-row gap-2 text-center">
+          <div className="scrollbar flex flex-row gap-3 text-center">
             {posts?.map((post: InstagramPost) => (
               <div key={post.id}>
                 {post.permalink.includes("reel") && (
                   <div>
-                    <video
-                      src={post.media_url}
-                      controls
-                      controlsList="nodownload"
-                      loop
-                      width="140"
-                    ></video>{" "}
                     <a
                       href={post.permalink}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <p className="text-xs text-white mt-2">릴스 보기</p>
+                      <video
+                        src={post.media_url}
+                        controls
+                        controlsList="nodownload"
+                        loop
+                        width="150"
+                      ></video>
                     </a>
                   </div>
                 )}
