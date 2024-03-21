@@ -30,14 +30,14 @@ const Info: React.FC = () => {
   const pathname = usePathname();
   const id = pathname.match(/\/info\/([^/]+)/)?.[1] || null;
 
-  const { data: reelsData, isLoading: reelsLoading } = useQuery(
-    "reelsData",
-    () => fetchReelsData(id as string)
-  );
-
   const { data: artistData, isLoading: artistLoading } = useQuery(
     "artistData",
     () => fetchArtistData(reelsData as any)
+  );
+
+  const { data: reelsData, isLoading: reelsLoading } = useQuery(
+    "reelsData",
+    () => fetchReelsData(id as string)
   );
 
   const getArtistName = () => {
@@ -49,21 +49,20 @@ const Info: React.FC = () => {
   };
 
   const getReelsContent = () => {
-    return reelsData ? reelsData.reelsContent : "Unknown";
+    return reelsData ? reelsData.caption : "Unknown";
   };
 
   const getReelsLink = () => {
     return reelsData ? reelsData.reelsLink : "Unknown";
   };
 
-  const getGroupLogo = () => {
+  const getGroupLogo = (fileName: string, idInfo?: string) => {
     const artist = artistData;
-    const firstFile = artist?.logo || "";
-    return artist
-      ? pb.files.getUrl(artist, firstFile, {
-          thumb: "44x44",
-        })
-      : "mainLogo";
+    if (idInfo && artist) {
+      const cdnLink = "https://mei-dance.cdn.misae.us/njcroodvcrhih1k/";
+      return cdnLink + idInfo + "/" + fileName;
+    }
+    return "";
   };
 
   const getArtistGroup = () => {
@@ -81,7 +80,7 @@ const Info: React.FC = () => {
   if (artistLoading || reelsLoading) return <p>Loading...</p>;
 
   return (
-    <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-20 overflow-hidden">
+    <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-20 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
       <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 py-3 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
         <div className="flex items-center justify-between px-10">
           <a href="/choom">
@@ -94,11 +93,11 @@ const Info: React.FC = () => {
           </a>
         </div>
       </header>
-      <div className="w-full flex flex-col items-center justify-center">
+      <div className="w-full px-10 flex flex-col items-center justify-center">
         <div className="w-full h-auto flex flex-col items-center">
           <div
             key={reelsData?.id}
-            className="w-full h-full flex flex-col items-center"
+            className="w-full h-full border-2 border-white flex flex-col items-center"
           >
             <video
               src={formatCdnLink(reelsData?.video, reelsData?.id)}
@@ -106,22 +105,18 @@ const Info: React.FC = () => {
               controlsList="nodownload"
               autoPlay
               loop
-              width={280}
-              className="mb-2"
             ></video>
           </div>
         </div>
-        <div className="flex flex-col mt-10">
-          <div className="mx-10 px-4 py-3 flex flex-row justify-between items-center bg-slate-400 rounded-2xl">
-            <button
-              style={{
-                backgroundImage: `url(${getGroupLogo()})`,
-                backgroundSize: "cover",
-                width: "50px",
-                height: "50px",
-                borderRadius: "100px",
-              }}
-            ></button>
+        <div className="w-full flex flex-col items-center">
+          <div className="w-full mt-12 px-6 py-3 flex flex-row gap-6 justify-start items-center bg-white rounded-2xl">
+            <button>
+              <img
+                className="w-14 h-14 rounded-full"
+                src={getGroupLogo(artistData?.logo, artistData?.id)}
+                alt=""
+              />
+            </button>
             <div className="flex flex-col">
               <h3 className="text-lg font-bold">{getSongName()}</h3>
               <p className="text-xs">
@@ -131,11 +126,11 @@ const Info: React.FC = () => {
               </p>
             </div>
           </div>
-          <div>
+          <div className="my-8 justify-start text-left">
             <div>
               {getReelsContent() && (
                 <p
-                  className="text-sm px-10 my-6"
+                  className="text-sm px-4 my-6 font-medium text-white"
                   dangerouslySetInnerHTML={{
                     __html: getReelsContent().replace(/^<p>|<\/p>$/g, ""),
                   }}
@@ -143,10 +138,10 @@ const Info: React.FC = () => {
               )}
             </div>
           </div>
-          <div className="w-full flex justify-center items-center">
+          <div className="w-full flex mb-20 justify-center items-center">
             <a href={getReelsLink()} target="_blank">
-              <button className="px-6 py-2 bg-blue-300 font-medium rounded-3xl">
-                릴스로 보기
+              <button className="px-9 py-3 bg-pink-700 font-bold text-lg text-white rounded-full">
+                릴스로 보러가기
               </button>
             </a>
           </div>
