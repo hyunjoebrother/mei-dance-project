@@ -17,6 +17,9 @@ const ChartData: React.FC = () => {
     chart: {
       type: "treemap",
       height: 660,
+      toolbar: {
+        show: false,
+      },
     },
     plotOptions: {
       treemap: {
