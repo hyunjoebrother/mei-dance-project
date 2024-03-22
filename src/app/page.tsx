@@ -1,9 +1,16 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import RecentReelsWrapper from "@/components/RecentReels";
-import ChartDataWrapper from "@/components/ChartData";
 import Link from "next/link";
+const ChartData = React.lazy(() => import("@/components/ChartData"));
 
 const Main: React.FC = () => {
+  const [isClient, setIsClient] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   return (
     <section className="w-full flex min-h-screen flex-col lg:px-28 xs:gap-10 gap-12 tb:gap-16 lg:gap-20 items-center 2xs:pt-20 xs:pt-24 2sm:pt-28 sm:pt-28 tb:pt-32 pt-40 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
       <Header />
@@ -12,7 +19,11 @@ const Main: React.FC = () => {
           MEI의 댄스 차트
         </h3>
         <div className="w-full h-auto">
-          <ChartDataWrapper />
+          {isClient && (
+            <React.Suspense fallback={<div>Loading...</div>}>
+              <ChartData />
+            </React.Suspense>
+          )}
         </div>
       </div>
       <div className="w-full">
