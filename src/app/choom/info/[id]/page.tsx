@@ -83,17 +83,20 @@ const Info: React.FC = () => {
   };
 
   return (
-    <section className="w-full flex min-h-screen flex-col gap-10 items-center 2xs:pt-16 xs:pt-20 pt-24 tb:pt-24 lg:pt-36 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
+    <section className="w-full flex min-h-screen flex-col gap-10 items-center 2xs:pt-20 xs:pt-24 pt-28 tb:pt-24 lg:pt-40 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
       <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-white backdrop-blur-2xl">
         <div className="py-3 tb:py-4 lg:py-5 2xs:px-5 xs:px-8 2sm:px-12 sm:px-16 tb:px-16 lg:px-24 xl:px-32 flex items-center justify-between">
           <a href="/choom">
-            <SkipPreviousIcon sx={{ color: "#FF32AD" }} className="w-6 h-6 2sm:w-7 2sm:h-7 sm:w-7 sm:h-7 tb:w-9 tb:h-9 lg:w-12 lg:h-12" />
+            <SkipPreviousIcon
+              sx={{ color: "#FF32AD" }}
+              className="w-7 h-7 2sm:w-8 2sm:h-8 sm:w-8 sm:h-8 tb:w-10 tb:h-10 lg:w-14 lg:h-14"
+            />
           </a>
           <a href="/">
             <Image
               src={logo}
               alt=""
-              className="mb-1 2xs:w-24 2xs:h-6 xs:w-28 xs:h-7 2sm:w-32 2sm:h-8 w-40 h-10 lg:w-48 lg:h-12 cursor-pointer"
+              className="2xs:w-20 2xs:h-10 xs:w-24 xs:h-12 2sm:w-[7.2rem] 2sm:h-[3.6rem] w-[7rem] h-14 lg:w-40 lg:h-20 cursor-pointer"
             />
           </a>
         </div>
@@ -129,7 +132,7 @@ const Info: React.FC = () => {
                 </button>
               )}
               <div className="flex flex-col">
-                <h3 className="xs:text-sm text-lg font-bold">
+                <h3 className="2xs:text-sm xs:text-sm text-lg font-bold">
                   {getSongName()}
                 </h3>
                 <p className="text-xs">

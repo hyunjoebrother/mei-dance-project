@@ -111,14 +111,14 @@ const Choom: React.FC = () => {
     );
 
   return (
-    <section className="w-full flex min-h-screen flex-col tb:px-16 lg:px-20 xl:px-28 gap-10 items-center pt-36 tb:pt-64 lg:pt-64 xl:pt-72 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
+    <section className="w-full flex min-h-screen flex-col tb:px-16 lg:px-20 xl:px-28 gap-10 items-center pt-36 tb:pt-[17rem] lg:pt-72 xl:pt-80 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
       <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-pink-500 backdrop-blur-2xl">
         <div className="py-3 tb:py-4 lg:py-5 flex items-center justify-center">
           <a href="/">
             <Image
               src={whiteLogo}
               alt=""
-              className="2xs:w-32 2xs:h-8 xs:w-36 xs:h-9 2sm:w-36 2sm:h-9 w-40 h-10 lg:w-48 lg:h-12 cursor-pointer"
+              className="2xs:w-20 2xs:h-10 xs:w-24 xs:h-12 2sm:w-[7.2rem] 2sm:h-[3.6rem] w-[7rem] h-14 lg:w-40 lg:h-20 cursor-pointer"
             />
           </a>
         </div>
