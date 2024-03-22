@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import "../../../globals.css";
 import PocketBase from "pocketbase";
 import Image from "next/image";
-// import mainLogo from "../../../public/images/logo.png";
+import logo from "../../../../../public/images/logo.png";
 
 const queryClient = new QueryClient();
 const pb = new PocketBase("https://mei-devdance.pockethost.io");
@@ -82,21 +82,24 @@ const Info: React.FC = () => {
   };
 
   return (
-    <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-20 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
-      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-white py-3 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-        <div className="flex items-center justify-between px-10">
+    <section className="w-full flex min-h-screen flex-col gap-10 items-center 2xs:pt-16 xs:pt-20 pt-24 tb:pt-24 lg:pt-36 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
+      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-white backdrop-blur-2xl">
+        <div className="py-3 tb:py-4 lg:py-5 2xs:px-5 xs:px-8 2sm:px-12 sm:px-16 tb:px-16 lg:px-24 xl:px-32 flex items-center justify-between">
           <a href="/choom">
             {/* <Image src={mainLogo} alt="" className="w-9 h-9 cursor-pointer" /> */}
             <p>뒤로가기</p>
           </a>
           <a href="/">
-            {/* <Image src={mainLogo} alt="" className="w-9 h-9 cursor-pointer" /> */}
-            <p>LOGO</p>
+            <Image
+              src={logo}
+              alt=""
+              className="2xs:w-24 2xs:h-6 xs:w-28 xs:h-7 2sm:w-32 2sm:h-8 w-40 h-10 lg:w-48 lg:h-12 cursor-pointer"
+            />
           </a>
         </div>
       </header>
-      <div className="w-full px-10 flex flex-col items-center justify-center">
-        <div className="w-full h-auto flex flex-col items-center">
+      <div className="w-full px-2 2sm:px-8 sm:px-20 tb:px-16 lg:px-24 xl:px-48 flex flex-col tb:flex-row lg:flex-row tb:gap-8 lg:gap-10 items-center justify-center">
+        <div className="w-full h-auto flex flex-col 2xs:px-8 xs:px-10 2sm:px-4 sm:px-16 xl:px-32 items-center lg:items-start">
           <div
             key={reelsData?.id}
             className="w-full h-full border-2 border-white flex flex-col items-center"
@@ -110,8 +113,8 @@ const Info: React.FC = () => {
             ></video>
           </div>
         </div>
-        <div className="w-full flex flex-col items-center">
-          <div className="w-full mt-12 px-6 py-3 flex flex-row gap-6 justify-start items-center bg-white rounded-2xl">
+        <div className="w-full flex flex-col px-6 lg:px-10 xl:px-12 items-center">
+          <div className="w-full 2xs:mt-10 mt-12 px-6 py-3 flex flex-row gap-6 justify-start items-center bg-white rounded-2xl">
             <>
               {" "}
               {artistLoading ? (
@@ -119,14 +122,16 @@ const Info: React.FC = () => {
               ) : (
                 <button>
                   <img
-                    className="w-14 h-14 rounded-full"
+                    className="2xs:w-10 2xs:h-10 xs:w-10 xs:h-10 2sm:w-12 2sm:h-12 w-14 h-14 rounded-full"
                     src={getGroupLogo(artistData?.logo, artistData?.id)}
                     alt=""
                   />
                 </button>
               )}
               <div className="flex flex-col">
-                <h3 className="text-lg font-bold">{getSongName()}</h3>
+                <h3 className="xs:text-sm text-lg font-bold">
+                  {getSongName()}
+                </h3>
                 <p className="text-xs">
                   {getArtistGroup() === getArtistName()
                     ? getArtistName()
@@ -139,7 +144,7 @@ const Info: React.FC = () => {
             <div>
               {getReelsContent() && (
                 <p
-                  className="text-sm px-3 my-6 font-medium text-white"
+                  className="2xs:text-xs xs:text-xs text-sm px-3 2xs:my-3 my-6 tb:my-10 lg:my-8 xl:my-12 font-medium text-white"
                   dangerouslySetInnerHTML={{
                     __html: getReelsContent().replace(/^<p>|<\/p>$/g, ""),
                   }}
@@ -149,10 +154,10 @@ const Info: React.FC = () => {
           </div>
           <div className="w-full flex mb-20 justify-center items-center text-center">
             <a href={getReelsLink()} target="_blank">
-              <button className="px-9 py-3 bg-pink-700 font-bold text-lg text-white rounded-full">
+              <button className="px-9 py-3 bg-pink-700 font-bold 2xs:text-xs xs:text-sm text-lg text-white rounded-full">
                 릴스로 보러가기
               </button>
-              <p className="text-xs text-white mt-2">
+              <p className="text-xs xl:text-sm text-white mt-2">
                 좋아요, 댓글, 칭찬해주기
               </p>
             </a>

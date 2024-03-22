@@ -49,13 +49,13 @@ const RecentReels: React.FC = () => {
   };
 
   return (
-    <section className="scrollbar w-[1200px] h-auto py-4 flex flex-col bg-white overflow-x-scroll">
+    <section className="scrollbar 2xs:w-[620px] xs:w-[800px] 2sm:w-[1000px] sm:w-[1200px] tb:w-[1400px] lg:w-[1800px] h-auto py-4 lg:px-4 flex flex-col bg-white overflow-x-scroll">
       <div>
         <div className="scrollbar flex flex-row gap-3 text-center">
           {reelsData?.map((reels) => (
             <div
               key={reels.id}
-              className="flex flex-col items-center border-2 border-pink-400 bg-white"
+              className="flex flex-col items-center border-2 border-mainPink bg-white"
             >
               <div key={reels.id} className="flex flex-col items-center">
                 {isFetching && (
@@ -64,12 +64,13 @@ const RecentReels: React.FC = () => {
                   </div>
                 )}
                 <Link href={`/choom/info/${reels.id}`} key={reels.id}>
-                  <video
-                    src={formatCdnLink(reels?.video, reels?.id)}
-                    controls
-                    controlsList="nodownload"
-                    width={200}
-                  ></video>
+                  <div>
+                    <video
+                      src={formatCdnLink(reels?.video, reels?.id)}
+                      controls
+                      controlsList="nodownload"
+                    ></video>
+                  </div>
                 </Link>
               </div>
             </div>

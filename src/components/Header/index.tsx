@@ -3,10 +3,10 @@ import logo from "../../../public/images/logo.png";
 
 const Header: React.FC = () => {
   return (
-    <header className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-50 bg-gradient-to-b from-white  py-3 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
+    <header className="fixed left-0 top-0 flex w-full justify-center py-3 tb:py-4 lg:py-5 border-b border-gray-50 bg-gradient-to-b from-white backdrop-blur-2xl">
       <div className="flex items-center justify-center">
         <a href="/">
-          <Image src={logo} alt="" className="w-9 h-9 cursor-pointer" />
+          <Image src={logo} alt="" className="2xs:w-32 2xs:h-8 xs:w-36 xs:h-9 2sm:w-36 2sm:h-9 w-40 h-10 lg:w-48 lg:h-12 cursor-pointer" />
         </a>
       </div>
     </header>
