@@ -65,9 +65,14 @@ const Info: React.FC = () => {
     const artist = artistData;
     if (fileName && idInfo && artist) {
       const cdnLink = "https://mei-dance.cdn.misae.us/njcroodvcrhih1k/";
-      return cdnLink + idInfo + "/" + fileName;
+      if (fileName === "") {
+        return logo.src;
+      } else {
+        return cdnLink + idInfo + "/" + fileName;
+      }
+    } else {
+      return logo.src;
     }
-    return "";
   };
 
   const getArtistGroup = () => {
