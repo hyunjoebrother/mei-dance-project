@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import RecentReelsWrapper from "@/components/RecentReels";
-import RecentReels from "@/components/RecentReels";
-import Image from "next/image";
+import ChartDataWrapper from "@/components/ChartData";
 import Link from "next/link";
 
 const Main: React.FC = () => {
@@ -10,9 +9,11 @@ const Main: React.FC = () => {
       <Header />
       <div className="w-full">
         <h3 className="pl-8 mb-2 font-bold 2xs:text-sm xs:text-lg text-xl">
-          도표 영역입니다
+          MEI의 댄스 차트
         </h3>
-        <div className="w-full h-48 bg-gray-600">도표 영역</div>
+        <div className="w-full h-auto">
+          <ChartDataWrapper />
+        </div>
       </div>
       <div className="w-full">
         <h3 className="pl-8 mb-2 font-bold 2xs:text-sm xs:text-lg text-xl">

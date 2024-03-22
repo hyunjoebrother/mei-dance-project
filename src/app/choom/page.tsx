@@ -82,6 +82,7 @@ const Choom: React.FC = () => {
 
   const uniqueGroups = getUniqueGroups();
 
+  // console.log(uniqueGroups)
   const getArtistGroup = (artistId: string) => {
     const artist = artistData?.find((artist) => artist.id === artistId);
     return artist ? artist.group : "Unknown";
