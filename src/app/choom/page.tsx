@@ -103,17 +103,6 @@ const Choom: React.FC = () => {
     return "";
   };
 
-  const loadMore = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
-  };
-
-  const loadPreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const isPreviousPageAvailable = currentPage > 1;
-  const isNextPageAvailable = reelsData?.length === 60;
-
   if (artistLoading || reelsLoading)
     return (
       <div className="loading-overlay">
@@ -122,7 +111,7 @@ const Choom: React.FC = () => {
     );
 
   return (
-    <section className="w-full flex min-h-screen flex-col tb:px-16 lg:px-20 xl:px-28 gap-10 items-center pt-36 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
+    <section className="w-full flex min-h-screen flex-col tb:px-16 lg:px-20 xl:px-28 gap-10 items-center pt-36 tb:pt-64 lg:pt-64 xl:pt-72 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
       <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-pink-500 backdrop-blur-2xl">
         <div className="py-3 tb:py-4 lg:py-5 flex items-center justify-center">
           <a href="/">
@@ -177,12 +166,12 @@ const Choom: React.FC = () => {
                   </div>
                 )}
                 <img src={formatCdnLink(reels.thumbnail, reels.id)} alt="" />
-                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden tb:hidden lg:hidden text-sm font-medium xl:my-3 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {reels?.songName.length > 24
-                    ? reels?.songName.substring(0, 2) + "..."
+                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden tb:hidden text-sm font-medium lg:my-3 xl:my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                  {reels?.songName.length > 16
+                    ? reels?.songName.substring(0, 10) + "..."
                     : reels?.songName}
                 </p>
-                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden xl:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden lg:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
                   {reels?.songName.length > 14
                     ? reels?.songName.substring(0, 12) + "..."
                     : reels?.songName}
@@ -197,23 +186,10 @@ const Choom: React.FC = () => {
           </Link>
         ))}
       </div>
-      <div className="flex justify-center mt-4 mb-20">
-        {isPreviousPageAvailable && (
-          <button
-            onClick={loadPreviousPage}
-            className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            이전 페이지
-          </button>
-        )}
-        {isNextPageAvailable && (
-          <button
-            onClick={loadMore}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md"
-          >
-            다음 페이지
-          </button>
-        )}
+      <div className="2xs:px-6 xs:px-6 2sm:px-4 2xs:my-10 my-12">
+        <div className="w-full 2xs:text-xs xs:text-xs 2sm:text-sm text-base tb:text-xl lg:text-xl tb:px-8 tb:py-6 lg:px-10 lg:py-6 px-4 py-3 flex flex-col justify-center items-center bg-white rounded-2xl">
+          정보) 과거순으로 갈수록 춤 실력이 형편없어집니다.
+        </div>
       </div>
     </section>
   );

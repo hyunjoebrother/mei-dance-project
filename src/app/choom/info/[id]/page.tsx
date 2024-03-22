@@ -7,6 +7,7 @@ import "../../../globals.css";
 import PocketBase from "pocketbase";
 import Image from "next/image";
 import logo from "../../../../../public/images/logo.png";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 
 const queryClient = new QueryClient();
 const pb = new PocketBase("https://mei-devdance.pockethost.io");
@@ -86,14 +87,13 @@ const Info: React.FC = () => {
       <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-white backdrop-blur-2xl">
         <div className="py-3 tb:py-4 lg:py-5 2xs:px-5 xs:px-8 2sm:px-12 sm:px-16 tb:px-16 lg:px-24 xl:px-32 flex items-center justify-between">
           <a href="/choom">
-            {/* <Image src={mainLogo} alt="" className="w-9 h-9 cursor-pointer" /> */}
-            <p>뒤로가기</p>
+            <SkipPreviousIcon sx={{ color: "#FF32AD" }} className="w-6 h-6 2sm:w-7 2sm:h-7 sm:w-7 sm:h-7 tb:w-9 tb:h-9 lg:w-12 lg:h-12" />
           </a>
           <a href="/">
             <Image
               src={logo}
               alt=""
-              className="2xs:w-24 2xs:h-6 xs:w-28 xs:h-7 2sm:w-32 2sm:h-8 w-40 h-10 lg:w-48 lg:h-12 cursor-pointer"
+              className="mb-1 2xs:w-24 2xs:h-6 xs:w-28 xs:h-7 2sm:w-32 2sm:h-8 w-40 h-10 lg:w-48 lg:h-12 cursor-pointer"
             />
           </a>
         </div>
