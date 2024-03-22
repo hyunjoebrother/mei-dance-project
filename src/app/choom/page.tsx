@@ -6,7 +6,7 @@ import "../globals.css";
 import PocketBase from "pocketbase";
 import Image from "next/image";
 import Link from "next/link";
-import mainLogo from "../../../public/images/logo.png";
+import whiteLogo from "../../../public/images/whiteLogo.png";
 
 const queryClient = new QueryClient();
 let pb: PocketBase;
@@ -122,17 +122,20 @@ const Choom: React.FC = () => {
     );
 
   return (
-    <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-36 overflow-hidden  bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
-      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-pink-500 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-        <div className="py-3 flex items-center justify-center">
+    <section className="w-full flex min-h-screen flex-col tb:px-16 lg:px-20 xl:px-28 gap-10 items-center pt-36 overflow-hidden bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
+      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-pink-500 backdrop-blur-2xl">
+        <div className="py-3 tb:py-4 lg:py-5 flex items-center justify-center">
           <a href="/">
-            <Image src={mainLogo} alt="" className="w-9 h-9 cursor-pointer" />
-            {/* <p>LOGO</p> */}
+            <Image
+              src={whiteLogo}
+              alt=""
+              className="2xs:w-32 2xs:h-8 xs:w-36 xs:h-9 2sm:w-36 2sm:h-9 w-40 h-10 lg:w-48 lg:h-12 cursor-pointer"
+            />
           </a>
         </div>
         <div className="scrollbar w-full h-auto border-t-2 border-b-2 border-pink-400 overflow-x-auto">
-          <div className="scrollbar w-[3000px] py-3 flex bg-white overflow-x-scroll">
-            <div className="scrollbar flex flex-row px-4 gap-5 text-center">
+          <div className="scrollbar w-[3200px] sm:w-[3200px] tb:w-[3600px] lg:w-[4400px] xl:w-[5000px] px-2 py-3 tb:px-4 tb:py-4 lg:px-8 lg:py-4 xl:px-10 xl:py-5 flex bg-white overflow-x-scroll">
+            <div className="scrollbar flex flex-row px-4 xs:gap-4 sm:gap-3 tb:gap-7 gap-5 text-center">
               {uniqueGroups.map((group) => (
                 <div
                   key={group}
@@ -143,21 +146,16 @@ const Choom: React.FC = () => {
                     style={{
                       backgroundImage: `url(${getGroupLogo(group)})`,
                       backgroundSize: "cover",
-                      width: "60px",
-                      height: "60px",
-                      borderRadius: "100px",
                     }}
-                    className={`text-xs ${
+                    className={`2xs:w-10 2xs:h-10 xs:w-[3.4rem] xs:h-[3.4rem] w-[3.6rem] h-[3.6rem] sm:w-[4.4rem] sm:h-[4.4rem] tb:w-20 tb:h-20 lg:w-16 lg:h-16 xl:w-20 xl:h-20 rounded-full ${
                       group === selectedGroup
-                        ? "border-[3px] border-pink-600"
+                        ? "border-[3px] border-mainPink"
                         : ""
                     }`}
                   ></button>
                   <p
-                    className={`text-xs font-medium overflow-hidden whitespace-nowrap overflow-ellipsis ${
-                      group === selectedGroup
-                        ? "text-pink-700 font-extrabold"
-                        : ""
+                    className={`2xs:text-[0.64rem] xs:text-xs 2sm:text-xs lg:text-xs xl:text-sm font-medium overflow-hidden whitespace-nowrap overflow-ellipsis ${
+                      group === selectedGroup ? "text-mainPink font-black" : ""
                     }`}
                   >
                     {group}
@@ -168,10 +166,10 @@ const Choom: React.FC = () => {
           </div>
         </div>
       </header>
-      <div className="w-full grid grid-cols-3">
+      <div className="w-full lg:px-16 xl:px-28 grid grid-cols-3 lg:grid-cols-5 xl:grid-cols-5">
         {filteredReels?.map((reels) => (
           <Link href={`/choom/info/${reels.id}`} key={reels.id}>
-            <div className="flex flex-col items-center border-2 border-pink-400 bg-white">
+            <div className="flex flex-col items-center border-2 border-mainPink bg-white">
               <div key={reels.id} className="flex flex-col items-center">
                 {isFetching && (
                   <div className="loading-overlay">
@@ -179,9 +177,19 @@ const Choom: React.FC = () => {
                   </div>
                 )}
                 <img src={formatCdnLink(reels.thumbnail, reels.id)} alt="" />
-                <p className="text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {reels?.songName.length > 16
-                    ? reels?.songName.substring(0, 16) + "..."
+                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden tb:hidden lg:hidden text-sm font-medium xl:my-3 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                  {reels?.songName.length > 24
+                    ? reels?.songName.substring(0, 2) + "..."
+                    : reels?.songName}
+                </p>
+                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden xl:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                  {reels?.songName.length > 14
+                    ? reels?.songName.substring(0, 12) + "..."
+                    : reels?.songName}
+                </p>
+                <p className="2xs:hidden tb:hidden lg:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                  {reels?.songName.length > 15
+                    ? reels?.songName.substring(0, 12) + "..."
                     : reels?.songName}
                 </p>
               </div>
