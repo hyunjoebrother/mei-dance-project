@@ -1,64 +1,77 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, QueryClientProvider, QueryClient } from "react-query";
+import PocketBase from "pocketbase";
+import Link from "next/link";
 
 const queryClient = new QueryClient();
+let pb: PocketBase;
 
-interface InstagramPost {
-  id: string;
-  media_url: string;
-  permalink: string;
-  caption: string;
+try {
+  pb = new PocketBase("https://mei-devdance.pockethost.io");
+} catch (error) {
+  console.log("Error: ", error);
+  /*@ts-ignore*/
+  console.log(error.isAbort);
 }
 
+const fetchReelsData = async () => {
+  const reels = await pb.collection("videos").getList(1, 7);
+  return reels?.items || [];
+};
+
 const RecentReels: React.FC = () => {
-  const { data: posts, isLoading } = useQuery<InstagramPost[]>(
-    "instagramPosts",
-    async () => {
-      const accessToken: string = process.env.NEXT_PUBLIC_ACCESS_TOKEN || "";
-      const userId: string = process.env.NEXT_PUBLIC_INSTA_APPID || "";
-      const limit: number = 7;
-      const response = await fetch(
-        `https://graph.instagram.com/${userId}/media?fields=id,media_url,permalink,caption&limit=${limit}&access_token=${accessToken}`
-      );
-      const data = await response.json();
-      console.log("data:", data);
-      return data.data;
+  const [hasFetched, setHasFetched] = useState(false);
+
+  useEffect(() => {
+    if (!hasFetched) {
+      fetchReelsData();
+      // console.log(reelsData);
+      setHasFetched(true);
+    }
+  }, [hasFetched]);
+
+  const { data: reelsData, isFetching } = useQuery(
+    ["reelsData"],
+    () => fetchReelsData(),
+    {
+      keepPreviousData: true,
+      refetchOnWindowFocus: false,
     }
   );
 
+  const formatCdnLink = (fileName: string, idInfo?: string) => {
+    if (idInfo) {
+      const cdnLink = "https://mei-dance.cdn.misae.us/l072ms0ejrlm6y9/";
+      return cdnLink + idInfo + "/" + fileName;
+    }
+    return "";
+  };
+
   return (
-    <section className="scrollbar w-[900px] h-auto py-4 flex flex-col bg-white overflow-x-scroll">
+    <section className="scrollbar w-[1200px] h-auto py-4 flex flex-col bg-white overflow-x-scroll">
       <div>
-        {isLoading ? (
-          <div className="w-[150px] h-[220px]">
-            <p>Loading...</p>
-          </div>
-        ) : (
-          <div className="scrollbar flex flex-row gap-3 text-center">
-            {posts?.map((post: InstagramPost) => (
-              <div key={post.id}>
-                {post.permalink.includes("reel") && (
-                  <div>
-                    <a
-                      href={post.permalink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <video
-                        src={post.media_url}
-                        controls
-                        controlsList="nodownload"
-                        loop
-                        width="150"
-                      ></video>
-                    </a>
+        <div className="scrollbar flex flex-row gap-3 text-center">
+          {reelsData?.map((reels) => (
+            <div className="flex flex-col items-center border-2 border-pink-400 bg-white">
+              <div key={reels.id} className="flex flex-col items-center">
+                {isFetching && (
+                  <div className="loading-overlay">
+                    <div className="spinner"></div>
                   </div>
                 )}
+                <Link href={`/choom/info/${reels.id}`} key={reels.id}>
+                  <video
+                    src={formatCdnLink(reels?.video, reels?.id)}
+                    controls
+                    controlsList="nodownload"
+                    width={200}
+                  ></video>
+                </Link>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

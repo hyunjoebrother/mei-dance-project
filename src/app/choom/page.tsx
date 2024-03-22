@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import "../globals.css";
-import "./index.css";
 import PocketBase from "pocketbase";
 import Image from "next/image";
 import Link from "next/link";
@@ -94,7 +93,7 @@ const Choom: React.FC = () => {
       )
     : reelsData;
 
-  console.log("필터링된 데이터", filteredReels);
+  // console.log("필터링된 데이터", filteredReels);
 
   const formatCdnLink = (fileName: string, idInfo?: string) => {
     if (idInfo) {
@@ -115,16 +114,16 @@ const Choom: React.FC = () => {
   const isPreviousPageAvailable = currentPage > 1;
   const isNextPageAvailable = reelsData?.length === 60;
 
-  // if (artistLoading || reelsLoading || instagramLoading)
-  //   return (
-  //     <div className="loading-overlay">
-  //       <div className="spinner">{/* <img src={mainLogo} alt="" /> */}</div>
-  //     </div>
-  //   );
+  if (artistLoading || reelsLoading)
+    return (
+      <div className="loading-overlay">
+        <div className="spinner">{/* <img src={mainLogo} alt="" /> */}</div>
+      </div>
+    );
 
   return (
     <section className="w-full flex min-h-screen flex-col gap-10 items-center pt-36 overflow-hidden  bg-gradient-to-b from-pink-200 to-pink-400 backdrop-blur-2xl">
-      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-300 bg-gradient-to-b from-pink-500 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
+      <header className="fixed left-0 top-0 flex flex-col w-full justify-center border-b border-gray-50 bg-gradient-to-b from-pink-500 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
         <div className="py-3 flex items-center justify-center">
           <a href="/">
             <Image src={mainLogo} alt="" className="w-9 h-9 cursor-pointer" />
@@ -149,12 +148,16 @@ const Choom: React.FC = () => {
                       borderRadius: "100px",
                     }}
                     className={`text-xs ${
-                      group === selectedGroup ? "border-[3px] border-pink-600" : ""
+                      group === selectedGroup
+                        ? "border-[3px] border-pink-600"
+                        : ""
                     }`}
                   ></button>
                   <p
                     className={`text-xs font-medium overflow-hidden whitespace-nowrap overflow-ellipsis ${
-                      group === selectedGroup ? "text-pink-700 font-extrabold" : ""
+                      group === selectedGroup
+                        ? "text-pink-700 font-extrabold"
+                        : ""
                     }`}
                   >
                     {group}
