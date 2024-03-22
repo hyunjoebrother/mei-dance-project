@@ -1,20 +1,26 @@
 "use client";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
+
+type ChartDataItem = {
+  x: string;
+  y: number;
+};
+
+type ChartSeries = {
+  data: ChartDataItem[];
+};
 
 const ChartData: React.FC = () => {
-  const options = {
+  const options: ApexOptions = {
     chart: {
       type: "treemap",
       height: 660,
-      toolbar: {
-        show: false,
-      },
     },
     plotOptions: {
       treemap: {
         distributed: true,
-        enableShades: false,
       },
     },
     legend: {
@@ -22,7 +28,7 @@ const ChartData: React.FC = () => {
     },
   };
 
-  const series = [
+  const series: ChartSeries[] = [
     {
       data: [
         { x: "세븐틴", y: 68 },
