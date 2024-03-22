@@ -53,7 +53,10 @@ const RecentReels: React.FC = () => {
       <div>
         <div className="scrollbar flex flex-row gap-3 text-center">
           {reelsData?.map((reels) => (
-            <div className="flex flex-col items-center border-2 border-pink-400 bg-white">
+            <div
+              key={reels.id}
+              className="flex flex-col items-center border-2 border-pink-400 bg-white"
+            >
               <div key={reels.id} className="flex flex-col items-center">
                 {isFetching && (
                   <div className="loading-overlay">
