@@ -36,20 +36,18 @@ const HeadMeta: React.FC = () => {
           content="219172e22eecf7265ffea644799d16afa08b2b38"
         />
       </Head>
-      <Head>
-        <Script
-          id="microsoft-clarity-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
+      <Script
+        id="microsoft-clarity-init"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "llmb6h760f");`,
-          }}
-        />
-      </Head>
+        }}
+      />
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=G-PYV4V9LQCM`}
