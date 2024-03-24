@@ -25,8 +25,11 @@ const fetchArtistData = async () => {
 };
 
 const fetchReelsData = async (page: number) => {
-  const reels = await pb.collection("videos").getList(page, 300);
-  return reels?.items || [];
+  const reels = await pb.collection("videos").getList(page, 310);
+  const sortedReels = reels?.items.sort((a, b) => {
+    return Date.parse(b.upload_time) - Date.parse(a.upload_time);
+  });
+  return sortedReels || [];
 };
 
 const Choom: React.FC = () => {
@@ -82,7 +85,6 @@ const Choom: React.FC = () => {
 
   const uniqueGroups = getUniqueGroups();
 
-  // console.log(uniqueGroups)
   const getArtistGroup = (artistId: string) => {
     const artist = artistData?.find((artist) => artist.id === artistId);
     return artist ? artist.group : "Unknown";
@@ -94,11 +96,9 @@ const Choom: React.FC = () => {
       )
     : reelsData;
 
-  // console.log("필터링된 데이터", filteredReels);
-
   const formatCdnLink = (fileName: string, idInfo?: string) => {
     if (idInfo) {
-      const cdnLink = "https://mei-dance.cdn.misae.us/l072ms0ejrlm6y9/";
+      const cdnLink = process.env.NEXT_PUBLIC_CDN_URL;
       return cdnLink + idInfo + "/" + fileName;
     }
     return "";
@@ -107,7 +107,7 @@ const Choom: React.FC = () => {
   if (artistLoading || reelsLoading)
     return (
       <div className="loading-overlay">
-        <div className="spinner">{/* <img src={mainLogo} alt="" /> */}</div>
+        <div className="spinner" />
       </div>
     );
 
@@ -158,9 +158,12 @@ const Choom: React.FC = () => {
       </header>
       <div className="w-full lg:px-16 xl:px-28 grid grid-cols-3 lg:grid-cols-5 xl:grid-cols-5">
         {filteredReels?.map((reels) => (
-          <Link href={`/choom/info/${reels.id}`} key={reels.id}>
+          <Link href={`/choom/info/${reels.id}`} key={reels.upload_time}>
             <div className="flex flex-col items-center border-2 border-mainPink bg-white">
-              <div key={reels.id} className="flex flex-col items-center">
+              <div
+                key={reels.upload_time}
+                className="flex flex-col items-center"
+              >
                 {isFetching && (
                   <div className="loading-overlay">
                     <div className="spinner"></div>
@@ -189,7 +192,7 @@ const Choom: React.FC = () => {
       </div>
       <div className="2xs:px-6 xs:px-6 2sm:px-4 2xs:my-10 my-12">
         <div className="w-full 2xs:text-xs xs:text-xs 2sm:text-sm text-base tb:text-xl lg:text-xl tb:px-8 tb:py-6 lg:px-10 lg:py-6 px-4 py-3 flex flex-col justify-center items-center bg-white rounded-2xl">
-          정보) 과거순으로 갈수록 춤 실력이 형편없어집니다.
+          정보) 과거로 갈수록 춤 실력이 형편없어집니다.
         </div>
       </div>
     </section>

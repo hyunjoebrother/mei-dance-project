@@ -16,7 +16,9 @@ try {
 }
 
 const fetchReelsData = async () => {
-  const reels = await pb.collection("videos").getList(1, 7);
+  const reels = await pb
+    .collection("videos")
+    .getList(1, 7, { sort: "-upload_time" });
   return reels?.items || [];
 };
 
@@ -25,8 +27,7 @@ const RecentReels: React.FC = () => {
 
   useEffect(() => {
     if (!hasFetched) {
-      fetchReelsData();
-      // console.log(reelsData);
+      fetchReelsData;
       setHasFetched(true);
     }
   }, [hasFetched]);
@@ -42,7 +43,7 @@ const RecentReels: React.FC = () => {
 
   const formatCdnLink = (fileName: string, idInfo?: string) => {
     if (idInfo) {
-      const cdnLink = "https://mei-dance.cdn.misae.us/l072ms0ejrlm6y9/";
+      const cdnLink = process.env.NEXT_PUBLIC_CDN_URL;
       return cdnLink + idInfo + "/" + fileName;
     }
     return "";
@@ -54,16 +55,16 @@ const RecentReels: React.FC = () => {
         <div className="scrollbar flex flex-row gap-3 text-center">
           {reelsData?.map((reels) => (
             <div
-              key={reels.id}
+              key={reels.upload_time}
               className="flex flex-col items-center border-2 border-mainPink bg-white"
             >
-              <div key={reels.id} className="flex flex-col items-center">
+              <div className="flex flex-col items-center">
                 {isFetching && (
                   <div className="loading-overlay">
                     <div className="spinner"></div>
                   </div>
                 )}
-                <Link href={`/choom/info/${reels.id}`} key={reels.id}>
+                <Link href={`/choom/info/${reels.id}`}>
                   <div>
                     <video
                       src={formatCdnLink(reels?.video, reels?.id)}
