@@ -67,8 +67,11 @@ const RecentReels: React.FC = () => {
                   <div>
                     <video
                       src={formatCdnLink(reels?.video, reels?.id)}
+                      autoPlay
+                      muted
                       controls
                       controlsList="nodownload"
+                      playsInline
                     ></video>
                   </div>
                 </Link>

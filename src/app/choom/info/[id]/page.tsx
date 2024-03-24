@@ -118,6 +118,7 @@ const Info: React.FC = () => {
               controlsList="nodownload"
               autoPlay
               loop
+              playsInline
             ></video>
           </div>
         </div>
