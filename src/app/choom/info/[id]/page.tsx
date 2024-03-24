@@ -20,15 +20,12 @@ const fetchReelsData = async (id: string) => {
 
 const fetchArtistData = async (reelsData: any) => {
   const artists = await pb.collection("artists").getList(1, 80);
-  // console.log("전체 아티스트 정보", artists);
   const artistMap: Record<string, any> = {};
   artists?.items.forEach((artist: any) => {
     artistMap[artist.id] = artist;
   });
 
   const matchingReels = artistMap[reelsData.artistName] || null;
-  // console.log("해당 아티스트 정보", matchingReels);
-
   return matchingReels;
 };
 
@@ -64,7 +61,7 @@ const Info: React.FC = () => {
   const getGroupLogo = (fileName: string, idInfo?: string) => {
     const artist = artistData;
     if (fileName && idInfo && artist) {
-      const cdnLink = "https://mei-dance.cdn.misae.us/njcroodvcrhih1k/";
+      const cdnLink = process.env.NEXT_PUBLIC_CDN_URL;
       if (fileName === "") {
         return logo.src;
       } else {
@@ -81,7 +78,7 @@ const Info: React.FC = () => {
 
   const formatCdnLink = (fileName: string, idInfo?: string) => {
     if (idInfo) {
-      const cdnLink = "https://mei-dance.cdn.misae.us/l072ms0ejrlm6y9/";
+      const cdnLink = process.env.NEXT_PUBLIC_CDN_URL;
       return cdnLink + idInfo + "/" + fileName;
     }
     return "";
@@ -167,7 +164,7 @@ const Info: React.FC = () => {
                 릴스로 보러가기
               </button>
               <p className="text-xs xl:text-sm text-white mt-2">
-                좋아요, 댓글, 칭찬해주기
+                좋아요, 댓글, 칭찬해주기😘
               </p>
             </a>
           </div>
