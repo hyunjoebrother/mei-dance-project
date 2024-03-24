@@ -15,7 +15,7 @@ const pb = new PocketBase("https://mei-devdance.pockethost.io");
 
 const fetchReelsData = async (id: string) => {
   const reels = await pb.collection("videos").getOne(id);
-  // console.log("릴스 정보", reels);
+  console.log("릴스 정보", reels);
   return reels;
 };
 
@@ -56,7 +56,9 @@ const Info: React.FC = () => {
   };
 
   const getReelsLink = () => {
-    return reelsData ? reelsData.reelsLink : "";
+    const instaCode = reelsData?.instagram_code || "";
+    let reelsLink = "https://www.instagram.com/reel/" + instaCode;
+    return reelsLink
   };
 
   const getGroupLogo = (fileName: string, idInfo?: string) => {
