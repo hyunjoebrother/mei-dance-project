@@ -50,7 +50,7 @@ const RecentReels: React.FC = () => {
   };
 
   return (
-    <section className="scrollbar 2xs:w-[620px] xs:w-[800px] 2sm:w-[1000px] sm:w-[1200px] tb:w-[1400px] lg:w-[1800px] h-auto py-4 lg:px-4 flex flex-col bg-white overflow-x-scroll">
+    <section className="scrollbar 2xs:w-[680px] xs:w-[920px] 2sm:w-[1200px] sm:w-[1400px] tb:w-[1600px] lg:w-[2000px] h-auto py-4 lg:px-4 flex flex-col bg-white overflow-x-scroll">
       <div>
         <div className="scrollbar flex flex-row gap-3 text-center">
           {reelsData?.map((reels) => (
@@ -65,7 +65,7 @@ const RecentReels: React.FC = () => {
                   </div>
                 )}
                 <Link href={`/choom/info/${reels.id}`}>
-                  <img src={formatCdnLink(reels.thumbnail, reels.id)} alt="" />
+                  <img src={formatCdnLink(reels.thumbnail, reels.id)} className="2xs:w-48 xs:w-64 2sm:w-72 sm:w-80 tb:w-[16rem] lg:w-[24rem]" alt="" />
                 </Link>
               </div>
             </div>
