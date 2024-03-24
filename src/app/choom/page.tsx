@@ -7,6 +7,7 @@ import PocketBase from "pocketbase";
 import Image from "next/image";
 import Link from "next/link";
 import whiteLogo from "../../../public/images/whiteLogo.png";
+import AudiotrackRoundedIcon from "@mui/icons-material/AudiotrackRounded";
 
 const queryClient = new QueryClient();
 let pb: PocketBase;
@@ -162,7 +163,7 @@ const Choom: React.FC = () => {
             <div className="flex flex-col items-center border-2 border-mainPink bg-white">
               <div
                 key={reels.upload_time}
-                className="flex flex-col items-center"
+                className="flex flex-col items-star"
               >
                 {isFetching && (
                   <div className="loading-overlay">
@@ -170,19 +171,22 @@ const Choom: React.FC = () => {
                   </div>
                 )}
                 <img src={formatCdnLink(reels.thumbnail, reels.id)} alt="" />
-                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden tb:hidden text-sm font-medium lg:my-3 xl:my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {reels?.songName.length > 16
+                <p className="ml-2 2xs:hidden xs:hidden 2sm:hidden sm:hidden tb:hidden text-sm font-medium lg:my-3 xl:my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                <AudiotrackRoundedIcon sx={{ color: "#FF32AD", width: "1.2rem" }} />
+                  {reels?.songName.length > 14
                     ? reels?.songName.substring(0, 10) + "..."
                     : reels?.songName}
                 </p>
-                <p className="2xs:hidden xs:hidden 2sm:hidden sm:hidden lg:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {reels?.songName.length > 14
-                    ? reels?.songName.substring(0, 12) + "..."
+                <p className="ml-3 2xs:hidden xs:hidden 2sm:hidden sm:hidden lg:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                <AudiotrackRoundedIcon sx={{ color: "#FF32AD", width: "1rem" }} />
+                  {reels?.songName.length > 18
+                    ? reels?.songName.substring(0, 16) + "..."
                     : reels?.songName}
                 </p>
-                <p className="2xs:hidden tb:hidden lg:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {reels?.songName.length > 15
-                    ? reels?.songName.substring(0, 12) + "..."
+                <p className="ml-2 2xs:hidden tb:hidden lg:hidden text-xs font-medium my-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                <AudiotrackRoundedIcon sx={{ color: "#FF32AD", width: ".8rem" }} />
+                  {reels?.songName.length > 12
+                    ? reels?.songName.substring(0, 11) + "..."
                     : reels?.songName}
                 </p>
               </div>
