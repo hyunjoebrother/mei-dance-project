@@ -65,16 +65,7 @@ const RecentReels: React.FC = () => {
                   </div>
                 )}
                 <Link href={`/choom/info/${reels.id}`}>
-                  <div>
-                    <video
-                      src={formatCdnLink(reels?.video, reels?.id)}
-                      autoPlay
-                      muted
-                      controls
-                      controlsList="nodownload"
-                      playsInline
-                    ></video>
-                  </div>
+                  <img src={formatCdnLink(reels.thumbnail, reels.id)} alt="" />
                 </Link>
               </div>
             </div>
