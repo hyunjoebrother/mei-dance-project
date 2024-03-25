@@ -75,7 +75,7 @@ const ChartData: React.FC = () => {
         { x: "CHOREO", y: 29 },
         { x: "인피니트", y: 1 },
         { x: "전소미", y: 3 },
-        { x: "ITZY", y: 1 },
+        { x: "ITZY", y: 2 },
         { x: "소녀시대", y: 1 },
         { x: "RIIZE", y: 3 },
         { x: "뉴이스트", y: 1 },
