@@ -35,7 +35,7 @@ const ChartData: React.FC = () => {
     {
       data: [
         { x: "세븐틴", y: 68 },
-        { x: "TWS", y: 2 },
+        { x: "TWS", y: 3 },
         { x: "(여자)아이들", y: 8 },
         { x: "NCT", y: 8 },
         { x: "Stray Kids", y: 11 },
@@ -72,9 +72,9 @@ const ChartData: React.FC = () => {
         { x: "BABYMONSTER", y: 2 },
         { x: "4minute", y: 2 },
         { x: "ATEEZ", y: 5 },
-        { x: "CHOREO", y: 29 },
+        { x: "CHOREO", y: 30 },
         { x: "인피니트", y: 1 },
-        { x: "전소미", y: 3 },
+        { x: "전소미", y: 4 },
         { x: "ITZY", y: 2 },
         { x: "소녀시대", y: 1 },
         { x: "RIIZE", y: 3 },
@@ -87,6 +87,7 @@ const ChartData: React.FC = () => {
         { x: "아이유", y: 2 },
         { x: "GOT7", y: 1 },
         { x: "SuperM", y: 1 },
+        { x: "ILLIT", y: 1 },
       ],
     },
   ];
