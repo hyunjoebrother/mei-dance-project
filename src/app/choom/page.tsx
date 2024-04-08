@@ -27,7 +27,7 @@ const fetchArtistData = async () => {
 };
 
 const fetchReelsData = async (page: number) => {
-  const reels = await pb.collection("videos").getList(page, 310);
+  const reels = await pb.collection("videos").getList(page, 350);
   const sortedReels = reels?.items.sort((a, b) => {
     return Date.parse(b.upload_time) - Date.parse(a.upload_time);
   });
