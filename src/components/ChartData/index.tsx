@@ -34,10 +34,10 @@ const ChartData: React.FC = () => {
   const series: ChartSeries[] = [
     {
       data: [
-        { x: "세븐틴", y: 68 },
+        { x: "세븐틴", y: 69 },
         { x: "TWS", y: 3 },
         { x: "(여자)아이들", y: 8 },
-        { x: "NCT", y: 9 },
+        { x: "NCT", y: 10 },
         { x: "Stray Kids", y: 11 },
         { x: "TWICE", y: 8 },
         { x: "ENHYPEN", y: 3 },
@@ -61,7 +61,7 @@ const ChartData: React.FC = () => {
         { x: "더보이즈", y: 1 },
         { x: "태양", y: 3 },
         { x: "오마이걸", y: 3 },
-        { x: "투모로우바이투게더", y: 8 },
+        { x: "투모로우바이투게더", y: 9 },
         { x: "STAYC", y: 4 },
         { x: "EXO", y: 5 },
         { x: "WANNA ONE", y: 1 },
