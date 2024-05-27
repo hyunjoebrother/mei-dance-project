@@ -34,9 +34,9 @@ const ChartData: React.FC = () => {
   const series: ChartSeries[] = [
     {
       data: [
-        { x: "세븐틴", y: 75 },
+        { x: "세븐틴", y: 77 },
         { x: "TWS", y: 3 },
-        { x: "(여자)아이들", y: 9 },
+        { x: "(여자)아이들", y: 10 },
         { x: "NCT", y: 11 },
         { x: "Stray Kids", y: 11 },
         { x: "TWICE", y: 8 },
@@ -46,10 +46,10 @@ const ChartData: React.FC = () => {
         { x: "ETC", y: 21 },
         { x: "방탄소년단", y: 15 },
         { x: "2PM", y: 2 },
-        { x: "IVE", y: 7 },
+        { x: "IVE", y: 8 },
         { x: "Billlie", y: 1 },
-        { x: "aespa", y: 5 },
-        { x: "마마무", y: 6 },
+        { x: "aespa", y: 6 },
+        { x: "마마무", y: 7 },
         { x: "블락비", y: 2 },
         { x: "LE SSERAFIM", y: 7 },
         { x: "NewJeans", y: 11 },
@@ -72,7 +72,7 @@ const ChartData: React.FC = () => {
         { x: "BABYMONSTER", y: 3 },
         { x: "4minute", y: 2 },
         { x: "ATEEZ", y: 5 },
-        { x: "CHOREO", y: 31 },
+        { x: "CHOREO", y: 32 },
         { x: "인피니트", y: 1 },
         { x: "전소미", y: 4 },
         { x: "ITZY", y: 2 },
@@ -91,6 +91,7 @@ const ChartData: React.FC = () => {
         { x: "틴탑", y: 1 },
         { x: "BoA", y: 1 },
         { x: "BOYNEXTDOOR", y: 1 },
+        { x: "CRAVITY", y: 1 },
       ],
     },
   ];
